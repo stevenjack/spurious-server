@@ -1,0 +1,6 @@
+'foo-bar':
+  :image: 'foo/bar'
+  :link:
+    - 'foo:bar'
+  :env:
+    FOO: 'bar'
