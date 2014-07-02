@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Spurious::Server::VERSION
   spec.authors       = ["Steven Jack"]
   spec.email         = ["stevenmajack@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{The server component that the spurious cli client connects to}
+  spec.description   = %q{The server component that the spurious cli client connects to}
+  spec.homepage      = "https://www.github.com/stevenjack/spurious-server§"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
