@@ -15,8 +15,10 @@ module Spurious
 
         case payload[:type]
         when "init"
-          send_data "Foo"
+          payload[:response] = 'Foo'
         end
+
+        send_payload payload
       end
 
       protected
@@ -27,11 +29,13 @@ module Spurious
         error("JSON payload malformed")
       end
 
-      def error(message)
-        JSON.generate({:error => message})
+      def send_payload(payload)
+        send_data(JSON.generate(payload))
       end
 
-
+      def error(message)
+        {:type => 'error', :response => { :message => message}}
+      end
 
     end
   end

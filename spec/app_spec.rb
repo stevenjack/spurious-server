@@ -7,11 +7,14 @@ describe Spurious::Server::App do
     let(:data) { "{\"type\":\"init\"}" }
 
     it "responds to an init message" do
-
-      #expect(Spurious::Server::State::Factory).to receive(:create).with(data)
       expect(EventMachine).to receive(:send_data)
       app.receive_data(data)
+    end
 
+    it "sends an error back if payload is malformed" do
+      response = "{\"type\":\"error\",\"response\":{\"message\":\"JSON payload malformed\"}}"
+      expect(EventMachine).to receive(:send_data).with(anything(), response, response.length)
+      app.receive_data("{ Test '; Malformed")
     end
 
   end
