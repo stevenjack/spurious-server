@@ -2,6 +2,7 @@ $: << File.join(File.dirname(__FILE__), '..', '..', 'lib')
 
 require "spurious/server"
 require "spurious/server/app"
+require "spurious/server/state/factory"
 require "helper/client"
 require "eventmachine"
 
