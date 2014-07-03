@@ -4,18 +4,16 @@ require "json"
 module Spurious
   module Server
     class App < EventMachine::Connection
-      attr_accessor :state_factory
-
-      def intialize(state_factory)
-        @state_factory = state_factory
-      end
 
       def receive_data data
         payload = parse_payload data
 
+        def initialize()
+        end
+
         case payload[:type]
         when "init"
-          payload[:response] = 'Foo'
+          payload = Spurious::Server::State::Factory.create(payload[:type], payload)
         else
           payload.tap do |p|
             p[:response] = { :message => "Type: #{payload[:type]} is not recognised" } unless p[:type] == 'error'

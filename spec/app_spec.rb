@@ -1,7 +1,7 @@
 require "helper/spec"
 
 describe Spurious::Server::App do
-  subject(:app) { Spurious::Server::App.new(double('Spurious::Server::State::Factory')) }
+  subject(:app) { Spurious::Server::App.new('blah')}
 
   describe "#receive_data(data)" do
     let(:data) { {:type => :init} }
