@@ -1,4 +1,5 @@
 require "eventmachine"
+require "json"
 
 module Spurious
   module Server
@@ -10,12 +11,27 @@ module Spurious
       end
 
       def receive_data data
-        #if data =~ /init/i
+        payload = parse_payload data
+
+        case payload[:type]
+        when "init"
           send_data "Foo"
-        #else
-          #send_data "Command: #{data} is unexpected\n"
-        #end
+        end
       end
+
+      protected
+
+      def parse_payload(payload)
+        JSON.parse(payload, :symbolize_names => true)
+      rescue
+        error("JSON payload malformed")
+      end
+
+      def error(message)
+        JSON.generate({:error => message})
+      end
+
+
 
     end
   end
