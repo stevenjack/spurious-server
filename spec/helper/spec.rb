@@ -5,6 +5,7 @@ require "spurious/server/app"
 require "spurious/server/state/factory"
 require "helper/client"
 require "eventmachine"
+require "json"
 
 def event_timer(timeout = 1)
   EventMachine.add_timer timeout do
