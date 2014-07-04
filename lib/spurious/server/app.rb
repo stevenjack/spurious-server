@@ -13,7 +13,7 @@ module Spurious
 
         case payload[:type]
         when "init"
-          payload = Spurious::Server::State::Factory.create(payload[:type], payload)
+          Spurious::Server::State::Factory.create(payload, self)
         else
           payload.tap do |p|
             p[:response] = { :message => "Type: #{payload[:type]} is not recognised" } unless p[:type] == 'error'
