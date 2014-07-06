@@ -7,6 +7,7 @@ describe Spurious::Server::State::Init do
     state = Spurious::Server::State::Init.new({:type => :init}, app_double)
 
     expect(app_double).to receive(:send_data).exactly(6).times
+    expect(app_double).to receive(:unbind)
     state.execute!
 
   end

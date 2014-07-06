@@ -13,6 +13,8 @@ module Spurious
           [1,2,3,4,5,6].each do |index|
             app.send_data 'foo'
           end
+
+          app.unbind
         end
 
       end
