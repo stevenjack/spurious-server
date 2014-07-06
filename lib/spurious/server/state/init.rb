@@ -4,19 +4,28 @@ module Spurious
   module Server
     module State
       class Init
-        attr_accessor :connection
+        attr_accessor :connection, :config
 
-        def initialize(payload, connection)
+        def initialize(payload, connection, config)
           @payload    = payload
           @connection = connection
+          @config     = config
         end
 
         def execute!
-          [1,2,3,4,5,6].each do |index|
-            connection.send_data 'foo'
+          config.each_key do |image|
+            send "Pulling #{image} from the public repo..."
+            Docker::Image.create('fromImage' => image)
           end
+          send "#{config.length} containers successfully initialized"
 
           connection.unbind
+        end
+
+        protected
+
+        def send(data)
+          connection.send_data data
         end
 
       end

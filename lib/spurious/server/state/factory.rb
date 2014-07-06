@@ -5,10 +5,10 @@ module Spurious
     module State
       module Factory
 
-        def self.create(payload, app)
+        def self.create(payload, *args)
           case payload[:type]
           when :init
-            Init.new(payload, app)
+            Init.new(payload, *args)
           end
         end
 
