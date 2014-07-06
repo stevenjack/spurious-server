@@ -1,20 +1,22 @@
+require 'docker'
+
 module Spurious
   module Server
     module State
       class Init
-        attr_accessor :app
+        attr_accessor :connection
 
-        def initialize(payload, app)
-          @payload = payload
-          @app     = app
+        def initialize(payload, connection)
+          @payload    = payload
+          @connection = connection
         end
 
         def execute!
           [1,2,3,4,5,6].each do |index|
-            app.send_data 'foo'
+            connection.send_data 'foo'
           end
 
-          app.unbind
+          connection.unbind
         end
 
       end
