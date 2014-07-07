@@ -8,8 +8,8 @@ module Spurious
       def receive_data data
         payload = parse_payload data
         state(payload[:type]).execute!
-      rescue Exception => e
-        send_payload error("JSON payload malformed")
+      rescue
+        state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
       end
 
       protected
@@ -28,16 +28,6 @@ module Spurious
 
       def parse_payload(payload)
         JSON.parse(payload, :symbolize_names => true)
-      rescue
-        error("JSON payload malformed")
-      end
-
-      def send_payload(payload)
-        send_data(JSON.generate(payload))
-      end
-
-      def error(message)
-        {:type => 'error', :response => { :message => message}}
       end
 
     end

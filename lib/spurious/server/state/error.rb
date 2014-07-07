@@ -5,11 +5,12 @@ module Spurious
   module Server
     module State
       class Error
-        attr_reader :message, :connection
+        attr_reader :connection
+        attr_accessor :message
 
-        def initialize(message, connection)
-          @message    = message
+        def initialize(connection, message = nil)
           @connection = connection
+          @message    = message
         end
 
         def execute!

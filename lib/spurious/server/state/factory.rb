@@ -10,8 +10,10 @@ module Spurious
           case type
           when :init
             Init.new(connection, config)
+          when :error
+            Error.new(connection)
           else
-            Error.new("Type: #{type} is not recognised", connection)
+            Error.new(connection, "Type: #{type} is not recognised")
           end
         end
 
