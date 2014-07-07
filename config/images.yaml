@@ -1,0 +1,27 @@
+:sqs:
+  :image: 'bbcnews/fake-sqs'
+  :name:  'spurious-sqs'
+
+:s3:
+  :image: 'bbcnews/fake-s3'
+  :name:  'spurious-s3'
+
+:dynamo:
+  :image: 'smaj/local-dynamo'
+  :name:  'spurious-dynamo'
+
+:memcached:
+  :image: 'smaj/memcached'
+  :name:  'spurious-memcached'
+
+:elasticache:
+  :image: 'smaj/fake-elasticache'
+  :name:  'spurious-elasticache'
+  :link:
+    - 'spurious-memcached:memcached01'
+  :env:
+    - FAKEELASTICACHE_DEFAULT_HOST: '127.0.0.1'
+
+:elasticache_docker:
+  :image: 'smaj/fake-elasticache'
+  :name:  'spurious-elasticache-docker'

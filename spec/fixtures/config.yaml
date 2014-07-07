@@ -1,0 +1,7 @@
+:test:
+  :image: 'foo/bar'
+  :name:  'foo-bar'
+  :link:
+    - 'foo:bar'
+  :env:
+    - :FOO: 'bar'
