@@ -2,9 +2,15 @@
 
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'spurious/server'
+require 'daemons'
 
-Docker.url = 'http://0.0.0.0:2375'
-
-EventMachine.run {
-  Spurious::Server.run!
-}
+Daemons.run_proc(
+  'Spurious Server', # name of daemon
+  :dir => '/tmp', # directory where pid file will be stored
+  :log_output => true
+) do
+  Docker.url = 'http://0.0.0.0:2375'
+  EventMachine.run {
+    Spurious::Server.run!
+  }
+end
