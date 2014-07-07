@@ -8,11 +8,10 @@ module Spurious
       class Up < Base
 
         def execute!
-          spurious_containers.peach do |container|
+          spurious_containers.each do |container|
             config = container_config(container.json["Name"])
             send "Starting container #{container.json["Name"]}..."
             meta = {"PublishAllPorts" => true}
-            puts config
             meta["Links"] = config[:link] unless config[:link].nil?
             container.start meta
           end

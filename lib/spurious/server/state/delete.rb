@@ -8,6 +8,7 @@ module Spurious
       class Delete < Base
 
         def execute!
+          containers = spurious_containers.length
           spurious_containers.peach do |container|
             send "Removing container #{container.json["Name"]}..."
             container.tap do |c|
@@ -15,7 +16,7 @@ module Spurious
               c.delete(:force => true)
             end
           end
-          send "#{spurious_containers.length} containers successfully removed"
+          send "#{containers} containers successfully removed"
 
           connection.unbind
         rescue Exception => e

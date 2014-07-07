@@ -10,10 +10,10 @@ module Spurious
 
         def execute!
 
-          app_config.peach do |name, meta|
+          app_config.each do |name, meta|
             begin
               send "Pulling #{name} from the public repo..."
-              image_meta = { 'fromImage' => name}
+              image_meta = { 'fromImage' => meta[:image]}
               image_meta['Env'] = meta[:env] unless meta[:env].nil?
               Docker::Image.create(image_meta)
 

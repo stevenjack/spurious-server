@@ -7,9 +7,6 @@
 'spurious-dynamo':
   :image: 'smaj/local-dynamo'
 
-'spurious-memcached':
-  :image: 'smaj/memcached'
-
 'spurious-elasticache':
   :image: 'smaj/fake-elasticache'
   :link:
@@ -21,3 +18,6 @@
   :image: 'smaj/fake-elasticache'
   :link:
     - 'spurious-memcached:memcached01'
+
+'spurious-memcached':
+  :image: 'smaj/memcached'

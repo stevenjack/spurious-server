@@ -12,17 +12,21 @@ module Spurious
           spurious_containers.peach do |container|
             config = container_config(container.json["Name"])
             ports[sanitize(container.json["Name"])] = []
-puts "Container: #{container.json["Name"]} ports: ", container.json["NetworkSettings"]["Ports"]
 
-            container.json["NetworkSettings"]["Ports"].each do |guest, mapping|
-              ports[sanitize(container.json["Name"])] << {
-                :GuestPort  => guest.split('/').first,
-                :HostPort   => mapping["HostPort"]
-              }
+            if !container.json["NetworkSettings"]["Ports"].nil? then
+
+              container.json["NetworkSettings"]["Ports"].each do |guest, mapping|
+                mapping.each do |map|
+                  ports[sanitize(container.json["Name"])] << {
+                    :GuestPort  => guest.split('/').first,
+                    :HostPort   => map["HostPort"]
+                 }
+                end
+              end
+
             end
 
           end
-puts ports
           send ports
 
           connection.unbind
