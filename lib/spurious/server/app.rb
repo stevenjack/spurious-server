@@ -8,12 +8,9 @@ module Spurious
       def receive_data data
         payload = parse_payload data
 
-        def initialize()
-        end
-
         case payload[:type]
         when "init"
-          Spurious::Server::State::Factory.create(payload, self)
+          Spurious::Server::State::Factory.create(payload, self).execute!
         else
           payload.tap do |p|
             p[:response] = { :message => "Type: #{payload[:type]} is not recognised" } unless p[:type] == 'error'
