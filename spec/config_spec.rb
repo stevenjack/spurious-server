@@ -3,14 +3,15 @@ require "helper/spec"
 describe Spurious::Server::Config do
   let(:expected_hash) {
     {
-      :image => 'foo/bar',
-      :name => 'foo-bar',
-      :link => [
-        'foo:bar'
-      ],
-      :env => [
-        { :FOO => 'bar' }
-      ]
+      'foo-bar' => {
+        :image => 'foo/bar',
+        :link => [
+          'foo:bar'
+        ],
+        :env => {
+          'FOO' => 'bar'
+        }
+      }
     }
   }
   let (:config_location) { File.join(File.dirname(__FILE__),'fixtures', 'config.yaml') }
@@ -22,14 +23,14 @@ describe Spurious::Server::Config do
     end
 
     it "Has the data needed to be a container" do
-      expect(config.app[:test]).to eq(expected_hash)
+      expect(config.app['foo-bar']).to eq(expected_hash['foo-bar'])
     end
 
   end
 
-  describe ".name_exists(image_id)" do
+  describe ".name_exists(name)" do
     it "Indicates that an name exists in the config" do
-      expect(config.name_exists? expected_hash[:name]).to be_truthy
+      expect(config.name_exists? expected_hash.keys[0]).to be_truthy
     end
   end
 
