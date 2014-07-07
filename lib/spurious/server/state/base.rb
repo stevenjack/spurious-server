@@ -34,7 +34,7 @@ module Spurious
         end
 
         def send(data)
-          connection.send_data JSON.generate({:type => state_identifer, :response => data}) + "\n"
+          connection.send_data JSON.generate({:type => state_identifer, :response => data})
         end
 
         def sanitize(name)
