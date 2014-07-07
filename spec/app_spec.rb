@@ -5,12 +5,11 @@ describe Spurious::Server::App do
 
   describe "#receive_data(data)" do
     let(:data) { {:type => :init} }
-    let(:factory_double) { double('Spurious::Server::State::Factory', :create => nil) }
     let(:state) { double('Spurious::Server::State::Init', :execute! => nil) }
 
     it "responds to an init message" do
       expect(EventMachine).to receive(:send_data)
-      allow(factory_double).to receive(:create).and_return(state)
+      expect(Spurious::Server::State::Factory).to receive(:create).and_return(state)
       app.receive_data(data.to_json)
     end
 
