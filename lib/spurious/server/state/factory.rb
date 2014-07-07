@@ -3,6 +3,7 @@ require 'spurious/server/state/up'
 require 'spurious/server/state/stop'
 require 'spurious/server/state/delete'
 require 'spurious/server/state/update'
+require 'spurious/server/state/ports'
 require 'spurious/server/state/error'
 
 module Spurious
@@ -18,6 +19,9 @@ module Spurious
             Up.new(connection, config)
           when :stop
             Stop.new(connection, config)
+          when :ports
+            Ports.new(connection, config)
+
           when :delete
             Delete.new(connection, config)
           when :update

@@ -10,17 +10,11 @@ module Spurious
       end
 
       def name_exists?(name)
-        app.has_key? sanitize(name)
+        app.has_key? name
       end
 
       def for(name)
-        app[sanitize(name)]
-      end
-
-      protected
-
-      def sanitize(name)
-        name.gsub('/', '')
+        app[name]
       end
 
     end

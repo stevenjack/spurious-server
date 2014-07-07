@@ -21,7 +21,7 @@ module Spurious
 
         def spurious_containers
           Docker::Container.all(:all => true).select do |container|
-            config.name_exists?(container.json["Name"])
+            config.name_exists?(sanitize(container.json["Name"]))
           end
         end
 
@@ -30,11 +30,15 @@ module Spurious
         end
 
         def container_config(image)
-          config.for image
+          config.for sanitize(image)
         end
 
         def send(data)
           connection.send_data JSON.generate({:type => state_identifer, :response => data}) + "\n"
+        end
+
+        def sanitize(name)
+          name.gsub('/', '')
         end
 
         private
