@@ -1,3 +1,6 @@
+require "spurious/server/state/factory"
+require "spurious/server/config"
+
 require "eventmachine"
 require "json"
 
@@ -8,7 +11,7 @@ module Spurious
       def receive_data data
         payload = parse_payload data
         state(payload[:type]).execute!
-      rescue
+      rescue Exception => e
         state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
       end
 
@@ -19,7 +22,7 @@ module Spurious
       end
 
       def config
-        @config ||= Spurious::Server::Config.new(config_location)
+        @config ||= Spurious::Server::Config.new(config_location).app
       end
 
       def config_location
@@ -27,7 +30,7 @@ module Spurious
       end
 
       def parse_payload(payload)
-        JSON.parse(payload, :symbolize_names => true)
+        JSON.parse(payload.strip, :symbolize_names => true)
       end
 
     end

@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
+require 'spurious/server'
+
+Docker.url = 'http://0.0.0.0:2375'
+
+EventMachine.run {
+  Spurious::Server.run!
+}

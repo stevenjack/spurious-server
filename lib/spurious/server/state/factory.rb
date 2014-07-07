@@ -7,7 +7,7 @@ module Spurious
       module Factory
 
         def self.create(type, connection, config)
-          case type
+          case type.to_sym
           when :init
             Init.new(connection, config)
           when :error
