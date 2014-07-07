@@ -1,6 +1,6 @@
 # Spurious::Server
 
-TODO: Write a gem description
+Spurious server is used by the [spurious](https://www.github.com/stevenjack/spurious) cli client.
 
 ## Installation
 
@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```bash
+spurious-server start
+```
 
 ## Contributing
 
