@@ -1,33 +1,35 @@
 require 'docker'
 require 'peach'
+require 'spurious/server'
+require 'spurious/server/state/base'
 
 module Spurious
   module Server
     module State
-      class Init
-        attr_accessor :connection, :config
-
-        def initialize(connection, config)
-          @connection = connection
-          @config     = config
-        end
+      class Init < Base
 
         def execute!
-          config.peach do |type, meta|
-            send "Pulling #{meta[:image]} from the public repo..."
-            Docker::Image.create('fromImage' => meta[:image])
+
+          app_config.peach do |name, meta|
+            begin
+              send "Pulling #{name} from the public repo..."
+              image_meta = { 'fromImage' => name}
+              image_meta['Env'] = meta[:env] unless meta[:env].nil?
+              Docker::Image.create(image_meta)
+
+              send "Creating container with name: #{name}"
+              Docker::Container.create("name" => name, "Image" => meta[:image])
+
+            rescue Exception => e
+              case e.message
+              when /409 Conflict/
+                puts "Container with name: #{name} already exists"
+              end
+            end
           end
-          send "#{config.length} containers successfully initialized"
 
+          send "#{config.app.length} containers successfully initialized"
           connection.unbind
-        rescue Exception => e
-          puts e.message
-        end
-
-        protected
-
-        def send(data)
-          connection.send_data JSON.generate({:type => :init, :response => data})
         end
 
       end

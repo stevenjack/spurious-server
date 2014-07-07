@@ -27,9 +27,9 @@ describe Spurious::Server::Config do
 
   end
 
-  describe ".image_exists(image_id)" do
-    it "Indicates that an image exists in the config" do
-      expect(config.image_exists? expected_hash[:image]).to be_truthy
+  describe ".name_exists(image_id)" do
+    it "Indicates that an name exists in the config" do
+      expect(config.name_exists? expected_hash[:name]).to be_truthy
     end
   end
 

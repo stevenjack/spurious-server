@@ -12,6 +12,7 @@ module Spurious
         payload = parse_payload data
         state(payload[:type]).execute!
       rescue Exception => e
+        puts e.message
         state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
       end
 
@@ -22,7 +23,7 @@ module Spurious
       end
 
       def config
-        @config ||= Spurious::Server::Config.new(config_location).app
+        @config ||= Spurious::Server::Config.new(config_location)
       end
 
       def config_location
