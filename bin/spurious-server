@@ -1,16 +1,19 @@
 #!/usr/bin/env ruby
 
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
-require 'spurious/server'
-require 'daemons'
 
-Daemons.run_proc(
-  'Spurious Server', # name of daemon
-  :dir => '/tmp', # directory where pid file will be stored
-  :log_output => true
-) do
-  Docker.url = 'http://0.0.0.0:2375'
-  EventMachine.run {
-    Spurious::Server.run!
-  }
+require 'spurious/server'
+require "spurious/server/version"
+require 'daemons'
+require "eventmachine"
+
+Docker.url = ENV.fetch('DOCKER_HOST', 'tcp://0.0.0.0:2375')
+ip         = ENV.fetch('SPURIOUS_SERVER_IP', '0.0.0.0')
+port       = ENV.fetch('SPURIOUS_SERVER_PORT', 4590)
+
+Excon.defaults[:write_timeout]  = 20000
+Excon.defaults[:read_timeout]   = 20000
+
+Daemons.run_proc('Spurious Server', :dir => '/tmp', :log_output => true) do
+  EventMachine.run Spurious::Server.handle(ip, port)
 end

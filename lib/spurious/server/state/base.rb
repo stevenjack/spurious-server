@@ -22,6 +22,8 @@ module Spurious
         def spurious_containers
           Docker::Container.all(:all => true).select do |container|
             config.name_exists?(sanitize(container.json["Name"]))
+          end.sort do |e1, e2|
+            app_config.keys.index(sanitize(e1.json["Name"])) <=> app_config.keys.index(sanitize(e2.json["Name"]))
           end
         end
 
@@ -33,8 +35,12 @@ module Spurious
           config.for sanitize(image)
         end
 
-        def send(data)
-          connection.send_data JSON.generate({:type => state_identifer, :response => data}) + "\n"
+        def send(data, close = false)
+          connection.send_data "#{JSON.generate({:type => state_identifer, :response => data, :close => close})}\n"
+        end
+
+        def error(message, close = false)
+          connection.send_data "#{JSON.generate({:type => 'error', :response => message, :close => close})}\n"
         end
 
         def sanitize(name)

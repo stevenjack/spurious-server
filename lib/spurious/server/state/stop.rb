@@ -12,7 +12,7 @@ module Spurious
             send "Stopping container #{container.json["Name"]}..."
             container.stop
           end
-          send "#{spurious_containers.length} containers successfully stopped"
+          send "#{spurious_containers.length} containers successfully stopped", true
 
           connection.unbind
         rescue Exception => e

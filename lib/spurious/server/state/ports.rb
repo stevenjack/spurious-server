@@ -27,7 +27,7 @@ module Spurious
             end
 
           end
-          send ports
+          send ports, true
 
           connection.unbind
         rescue Exception => e
