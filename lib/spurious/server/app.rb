@@ -7,21 +7,24 @@ module Spurious
 
       def receive_data data
         payload = parse_payload data
-
-        case payload[:type]
-        when "init"
-          Spurious::Server::State::Factory.create(payload, self).execute!
-        else
-          payload.tap do |p|
-            p[:response] = { :message => "Type: #{payload[:type]} is not recognised" } unless p[:type] == 'error'
-            p[:type] = 'error'
-          end
-        end
-
-        send_payload payload
+        state(payload[:type]).execute!
+      rescue Exception => e
+        send_payload error("JSON payload malformed")
       end
 
       protected
+
+      def state(type)
+        Spurious::Server::State::Factory.create(type, self, config)
+      end
+
+      def config
+        @config ||= Spurious::Server::Config.new(config_location)
+      end
+
+      def config_location
+        File.join(File.dirname(__FILE__), '..','..', '..', 'config', 'images.yaml')
+      end
 
       def parse_payload(payload)
         JSON.parse(payload, :symbolize_names => true)

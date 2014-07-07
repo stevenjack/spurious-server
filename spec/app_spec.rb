@@ -8,7 +8,7 @@ describe Spurious::Server::App do
     let(:state) { double('Spurious::Server::State::Init', :execute! => nil) }
 
     it "responds to an init message" do
-      expect(EventMachine).to receive(:send_data)
+      expect(state).to receive(:execute!)
       expect(Spurious::Server::State::Factory).to receive(:create).and_return(state)
       app.receive_data(data.to_json)
     end
@@ -19,7 +19,7 @@ describe Spurious::Server::App do
       app.receive_data("{ Test / Malformed }")
     end
 
-    it "sends and error back if the type is not recognised" do
+    it "sends an error back if the type is not recognised" do
       data[:type] = 'test'
       response = "{\"type\":\"error\",\"response\":{\"message\":\"Type: test is not recognised\"}}"
       expect(EventMachine).to receive(:send_data).with(anything(), response, response.length)

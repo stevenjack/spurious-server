@@ -9,7 +9,7 @@ describe Spurious::Server::State::Init do
         :image => 'foo/bar'
       }
     }
-    state = Spurious::Server::State::Init.new({:type => :init}, connection_double, config_stub)
+    state = Spurious::Server::State::Init.new(connection_double, config_stub)
     allow(Docker::Image).to receive(:create).once.with('fromImage' => 'foo/bar').and_return(true)
 
     expect(connection_double).to receive(:send_data).exactly(2).times

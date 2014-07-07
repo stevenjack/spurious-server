@@ -6,8 +6,7 @@ module Spurious
       class Init
         attr_accessor :connection, :config
 
-        def initialize(payload, connection, config)
-          @payload    = payload
+        def initialize(connection, config)
           @connection = connection
           @config     = config
         end
