@@ -13,9 +13,9 @@ module Spurious
         end
 
         def execute!
-          config.each_key do |image|
-            send "Pulling #{image} from the public repo..."
-            Docker::Image.create('fromImage' => image)
+          config.each do |type, meta|
+            send "Pulling #{meta[:image]} from the public repo..."
+            Docker::Image.create('fromImage' => meta[:image])
           end
           send "#{config.length} containers successfully initialized"
 

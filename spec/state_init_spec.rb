@@ -5,12 +5,12 @@ describe Spurious::Server::State::Init do
   it "Pulls down the docker images down and sends response back to client" do
     connection_double = double('Spurious::Server::App')
     config_stub = {
-      'test/image' => {
-        :foo => :bar
+      :foo => {
+        :image => 'foo/bar'
       }
     }
     state = Spurious::Server::State::Init.new({:type => :init}, connection_double, config_stub)
-    allow(Docker::Image).to receive(:create).once.and_return(true)
+    allow(Docker::Image).to receive(:create).once.with('fromImage' => 'foo/bar').and_return(true)
 
     expect(connection_double).to receive(:send_data).exactly(2).times
     expect(connection_double).to receive(:unbind)
