@@ -7,8 +7,6 @@ require "spurious/server/version"
 require "eventmachine"
 require "spurious/server/app"
 
-
-
 Daemons.run_proc(
   'Spurious Server', # name of daemon
   :dir => '/tmp', # directory where pid file will be stored
