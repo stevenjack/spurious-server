@@ -16,7 +16,7 @@ module Spurious
               c.delete(:force => true)
             end
           end
-          send "#{containers} containers successfully removed"
+          send "#{containers} containers successfully removed", true
 
           connection.unbind
         rescue Exception => e
