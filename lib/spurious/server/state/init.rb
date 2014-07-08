@@ -8,28 +8,51 @@ module Spurious
     module State
       class Init < Base
 
+        attr_accessor :completed_containers
+
         def execute!
+          this = self
+          completed_containers = 0
 
           app_config.each do |name, meta|
-            begin
-              send "Pulling #{name} from the public repo..."
-              image_meta = { 'fromImage' => meta[:image]}
-              image_meta['Env'] = meta[:env] unless meta[:env].nil?
-              Docker::Image.create(image_meta)
+            image_meta = { 'fromImage' => meta[:image]}
+            image_meta['Env'] = meta[:env] unless meta[:env].nil?
 
-              send "Creating container with name: #{name}"
-              Docker::Container.create("name" => name, "Image" => meta[:image])
+            container_operation = Proc.new do
 
-            rescue Exception => e
-              case e.message
-              when /409 Conflict/
-                puts "Container with name: #{name} already exists"
+              begin
+                this.send "Creating container with name: #{name}"
+                Docker::Container.create("name" => name, "Image" => meta[:image])
+              rescue Exception => e
+                case e.message
+                when /409 Conflict/
+                  this.error "Container with name: #{name} already exists"
+                end
               end
+
+            end
+
+            container_callback = Proc.new do
+              completed_containers = completed_containers + 1
+              this.send("#{config.app.length} containers successfully initialized", true) if completed_containers == app_config.length
+            end
+
+            image_operation = Proc.new do
+              this.send "Pulling #{name} from the public repo..."
+              Docker::Image.create(image_meta)
+            end
+
+            image_callback = Proc.new do
+              EM.add_timer(1) do
+                EM.defer(container_operation, container_callback)
+              end
+            end
+
+            EM.add_timer(1) do
+              EM.defer(image_operation, image_callback)
             end
           end
 
-          send "#{config.app.length} containers successfully initialized"
-#          connection.close_connection
         end
 
       end
