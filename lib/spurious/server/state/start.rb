@@ -5,7 +5,7 @@ require 'spurious/server/state/base'
 module Spurious
   module Server
     module State
-      class Up < Base
+      class Start < Base
 
         def execute!
           spurious_containers.each do |container|
@@ -15,7 +15,7 @@ module Spurious
             meta["Links"] = config[:link] unless config[:link].nil?
             container.start meta
           end
-          send "#{spurious_containers.length} containers successfully started"
+          send "#{spurious_containers.length} containers successfully started", true
 
           connection.unbind
         rescue Exception => e
