@@ -9,8 +9,10 @@ module Spurious
     class App < EventMachine::Connection
 
       def receive_data data
-        payload = parse_payload data
-        state(payload[:type]).execute!
+        EM::next_tick {
+          payload = parse_payload data
+          state(payload[:type]).execute!
+        }
       rescue Exception => e
         puts e.message
         state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!

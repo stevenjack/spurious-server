@@ -29,7 +29,7 @@ module Spurious
           end
 
           send "#{config.app.length} containers successfully initialized"
-          connection.unbind
+#          connection.close_connection
         end
 
       end

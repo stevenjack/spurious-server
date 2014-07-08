@@ -3,6 +3,11 @@
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'spurious/server'
 require 'daemons'
+require "spurious/server/version"
+require "eventmachine"
+require "spurious/server/app"
+
+
 
 Daemons.run_proc(
   'Spurious Server', # name of daemon
@@ -11,6 +16,6 @@ Daemons.run_proc(
 ) do
   Docker.url = 'http://0.0.0.0:2375'
   EventMachine.run {
-    Spurious::Server.run!
+    EventMachine.start_server '0.0.0.0', 4590, Spurious::Server::App
   }
 end
