@@ -27,6 +27,8 @@ module Spurious
                 case e.message
                 when /409 Conflict/
                   this.error "Container with name: #{name} already exists"
+                else
+                  this.error "Error creating container: #{e.message}"
                 end
               end
 
@@ -38,8 +40,13 @@ module Spurious
             end
 
             image_operation = Proc.new do
-              this.send "Pulling #{name} from the public repo..."
-              Docker::Image.create(image_meta)
+              begin
+                this.send "Pulling #{name} from the public repo..."
+                Docker::Image.create(image_meta)
+              rescue Exception => e
+                this.error "Error pulling down image: #{e.message}"
+              end
+
             end
 
             image_callback = Proc.new do
