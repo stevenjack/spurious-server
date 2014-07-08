@@ -16,8 +16,8 @@ describe Spurious::Server::State::Init do
     allow(Docker::Image).to receive(:create).once.with('fromImage' => 'foo/bar').and_return(true)
     allow(Docker::Container).to receive(:create).once.with('name' => 'foo-bar', 'Image' => 'foo/bar').and_return(true)
 
-    expect(connection_double).to receive(:send_data).exactly(3).times
-    expect(connection_double).to receive(:unbind)
+    allow(EM).to receive(:add_timer).twice
+
     state.execute!
 
   end
