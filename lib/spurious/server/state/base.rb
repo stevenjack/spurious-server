@@ -22,6 +22,8 @@ module Spurious
         def spurious_containers
           Docker::Container.all(:all => true).select do |container|
             config.name_exists?(sanitize(container.json["Name"]))
+          end.sort do |e1, e2|
+            app_config.keys.index(sanitize(e1.json["Name"])) <=> app_config.keys.index(sanitize(e2.json["Name"]))
           end
         end
 
