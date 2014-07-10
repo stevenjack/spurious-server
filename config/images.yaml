@@ -1,11 +1,11 @@
 'spurious-sqs':
-  :image: 'bbcnews/fake-sqs'
+  :image: 'smaj/spurious-sqs'
 
 'spurious-s3':
-  :image: 'bbcnews/fake-s3'
+  :image: 'smaj/spurious-s3'
 
 'spurious-dynamo':
-  :image: 'smaj/local-dynamo'
+  :image: 'smaj/spurious-dynamo'
 
 'spurious-memcached':
   :image: 'smaj/memcached'
