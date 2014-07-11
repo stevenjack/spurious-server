@@ -8,9 +8,17 @@ module Spurious
   module Server
     class App < EventMachine::Connection
 
+      def initialize(docker_host)
+        @docker_host = docker_host
+      end
+
+      def docker_host_ip
+        @docker_host[/\/\/([0-9\.]+):/,1]
+      end
+
       def receive_data data
           payload = parse_payload data
-          state(payload).execute!
+          state(payload[:type]).execute!
       rescue Exception => e
         puts e.message
         state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
@@ -18,8 +26,8 @@ module Spurious
 
       protected
 
-      def state(payload)
-        Spurious::Server::State::Factory.create(payload[:type], self, config, payload)
+      def state(type)
+        Spurious::Server::State::Factory.create(type, self, config, docker_host_ip)
       end
 
       def config
