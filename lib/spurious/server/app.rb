@@ -10,7 +10,7 @@ module Spurious
 
       def receive_data data
           payload = parse_payload data
-          state(payload[:type]).execute!
+          state(payload).execute!
       rescue Exception => e
         puts e.message
         state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
@@ -18,8 +18,8 @@ module Spurious
 
       protected
 
-      def state(type)
-        Spurious::Server::State::Factory.create(type, self, config)
+      def state(payload)
+        Spurious::Server::State::Factory.create(payload[:type], self, config, payload)
       end
 
       def config
