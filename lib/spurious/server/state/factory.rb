@@ -11,12 +11,12 @@ module Spurious
     module State
       module Factory
 
-        def self.create(type, connection, config)
+        def self.create(type, connection, config, payload)
           case type.to_sym
           when :init
             Init.new(connection, config)
           when :start
-            Start.new(connection, config)
+            Start.new(connection, config, payload[:host_ip])
           when :stop
             Stop.new(connection, config)
           when :ports
