@@ -8,6 +8,14 @@ module Spurious
   module Server
     class App < EventMachine::Connection
 
+      def initialize(docker_host)
+        @docker_host = docker_host
+      end
+
+      def docker_host_ip
+        @docker_host[/\/\/([0-9\.]+):/,1]
+      end
+
       def receive_data data
           payload = parse_payload data
           state(payload[:type]).execute!
@@ -19,7 +27,7 @@ module Spurious
       protected
 
       def state(type)
-        Spurious::Server::State::Factory.create(type, self, config)
+        Spurious::Server::State::Factory.create(type, self, config, docker_host_ip)
       end
 
       def config
