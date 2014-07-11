@@ -7,6 +7,13 @@ module Spurious
     module State
       class Ports < Base
 
+        attr_accessor :docker_host_ip
+
+        def initialize(connection, config, docker_host_ip)
+          super(connection, config)
+          @docker_host_ip = docker_host_ip
+        end
+
         def execute!
           ports = {}
           spurious_containers.peach do |container|
@@ -18,7 +25,7 @@ module Spurious
               container.json["NetworkSettings"]["Ports"].each do |guest, mapping|
                 mapping.each do |map|
                   ports[sanitize(container.json["Name"])] << {
-                    :GuestPort  => guest.split('/').first,
+                    :Host       => docker_host_ip,
                     :HostPort   => map["HostPort"]
                  }
                 end

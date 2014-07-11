@@ -20,7 +20,7 @@ module Spurious
           when :stop
             Stop.new(connection, config)
           when :ports
-            Ports.new(connection, config)
+            Ports.new(connection, config, docker_host_ip)
           when :delete
             Delete.new(connection, config)
           when :update
