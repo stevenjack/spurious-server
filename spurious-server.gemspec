@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "eventmachine"
   spec.add_runtime_dependency "docker-api"
   spec.add_runtime_dependency "daemons"
+  spec.add_runtime_dependency "peach"
 
 
 end
