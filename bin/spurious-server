@@ -3,18 +3,17 @@
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'spurious/server'
-require "spurious/server/version"
+require 'spurious/server/version'
 require 'daemons'
-require "eventmachine"
+require 'eventmachine'
+require 'spurious/server/options'
 
-docker_host = ENV.fetch('DOCKER_HOST', 'tcp://0.0.0.0:2375')
-ip          = ENV.fetch('SPURIOUS_SERVER_IP', '0.0.0.0')
-port        = ENV.fetch('SPURIOUS_SERVER_PORT', 4590)
-Docker.url  = docker_host
+options = Spurious::Server::Options.new(ENV)
 
-Excon.defaults[:write_timeout]  = 20000
-Excon.defaults[:read_timeout]   = 20000
+Docker.url                     = options.docker_full_path if options.docker_api
+Excon.defaults[:write_timeout] = options.write_timeout
+Excon.defaults[:read_timeout]  = options.read_timeout
 
 Daemons.run_proc('Spurious Server', :dir => '/tmp', :log_output => true) do
-  EventMachine.run Spurious::Server.handle(ip, port, docker_host)
+  EventMachine.run Spurious::Server.handle(options)
 end
