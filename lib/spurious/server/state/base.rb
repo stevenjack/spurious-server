@@ -47,6 +47,10 @@ module Spurious
           name.gsub('/', '')
         end
 
+        def docker_available?
+
+        end
+
         private
 
         def state_identifer
