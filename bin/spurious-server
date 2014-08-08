@@ -10,7 +10,6 @@ require 'spurious/server/options'
 
 options = Spurious::Server::Options.new(ENV)
 
-Docker.url                     = options.docker_full_path if options.docker_api
 Excon.defaults[:write_timeout] = options.write_timeout
 Excon.defaults[:read_timeout]  = options.read_timeout
 

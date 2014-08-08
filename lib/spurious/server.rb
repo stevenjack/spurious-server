@@ -11,7 +11,7 @@ module Spurious
           options.server_ip,
           options.server_port,
           Spurious::Server::App,
-          options.docker_host
+          options
         )
       end
     end
