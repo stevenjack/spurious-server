@@ -7,13 +7,10 @@ require "json"
 module Spurious
   module Server
     class App < EventMachine::Connection
+      attr_accessor :options
 
-      def initialize(docker_host)
-        @docker_host = docker_host
-      end
-
-      def docker_host_ip
-        @docker_host[/\/\/([0-9\.]+):/,1]
+      def initialize(options)
+        @options = options
       end
 
       def receive_data data
@@ -27,7 +24,7 @@ module Spurious
       protected
 
       def state(type)
-        Spurious::Server::State::Factory.create(type, self, config, docker_host_ip)
+        Spurious::Server::State::Factory.create(type, self, config, options)
       end
 
       def config

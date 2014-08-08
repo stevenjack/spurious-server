@@ -5,9 +5,14 @@ require "spurious/server/app"
 module Spurious
   module Server
 
-    def self.handle(ip, port, docker_host)
+    def self.handle(options)
       Proc.new do
-        EventMachine.start_server ip, port, Spurious::Server::App, docker_host
+        EventMachine.start_server(
+          options.server_ip,
+          options.server_port,
+          Spurious::Server::App,
+          options
+        )
       end
     end
 

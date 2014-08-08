@@ -11,16 +11,16 @@ module Spurious
     module State
       module Factory
 
-        def self.create(type, connection, config, docker_host_ip)
+        def self.create(type, connection, config, options)
           case type.to_sym
           when :init
             Init.new(connection, config)
           when :start
-            Start.new(connection, config, docker_host_ip)
+            Start.new(connection, config, options.docker_host)
           when :stop
             Stop.new(connection, config)
           when :ports
-            Ports.new(connection, config, docker_host_ip)
+            Ports.new(connection, config, options.docker_host)
           when :delete
             Delete.new(connection, config)
           when :update
