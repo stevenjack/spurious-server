@@ -34,11 +34,12 @@ module Spurious
             end
 
           end
-          send ports, true
+          send ports, :info, true
 
           connection.unbind
         rescue Exception => e
           puts e.message
+          raise('There was a problem connecting to the Docker API (check that docker is running or if not running under linux check the VM hosting docker is running and the API is accesbile')
         end
 
       end

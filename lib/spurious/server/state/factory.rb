@@ -2,7 +2,6 @@ require 'spurious/server/state/init'
 require 'spurious/server/state/start'
 require 'spurious/server/state/stop'
 require 'spurious/server/state/delete'
-require 'spurious/server/state/update'
 require 'spurious/server/state/ports'
 require 'spurious/server/state/error'
 
@@ -11,7 +10,7 @@ module Spurious
     module State
       module Factory
 
-        def self.create(type, connection, config, options)
+        def self.create(type, connection, config, options = {})
           case type.to_sym
           when :init
             Init.new(connection, config, options.docker_host)
@@ -23,8 +22,6 @@ module Spurious
             Ports.new(connection, config, options.docker_host)
           when :delete
             Delete.new(connection, config)
-          when :update
-            Update.new(connection, config)
           when :error
             Error.new(connection)
           else

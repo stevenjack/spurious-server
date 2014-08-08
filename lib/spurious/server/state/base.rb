@@ -1,6 +1,7 @@
 require 'docker'
 require 'peach'
 require 'spurious/server'
+require 'excon'
 
 module Spurious
   module Server
@@ -9,8 +10,15 @@ module Spurious
         attr_accessor :connection, :config
 
         def initialize(connection, config)
-          @connection = connection
-          @config     = config
+          @connection      = connection
+          @config          = config
+          connection_timeouts
+        end
+
+        def connection_timeouts(connect = 1, read = 5, write = 5)
+          Excon.defaults[:write_timeout]   = write
+          Excon.defaults[:read_timeout]    = read
+          Excon.defaults[:connect_timeout] = connect
         end
 
         def execute!
@@ -35,16 +43,20 @@ module Spurious
           config.for sanitize(image)
         end
 
-        def send(data, close = false)
-          connection.send_data "#{JSON.generate({:type => state_identifer, :response => data, :close => close})}\n"
+        def send(data, message_type = 'info', close = false, colour = :white)
+          connection.send_data "#{JSON.generate({:message_type => message_type, :type => state_identifer, :response => data, :close => close, :colour => colour})}\n"
         end
 
         def error(message, close = false)
-          connection.send_data "#{JSON.generate({:type => 'error', :response => message, :close => close})}\n"
+          connection.error(message, close)
         end
 
         def sanitize(name)
           name.gsub('/', '')
+        end
+
+        def docker_available?
+
         end
 
         private
