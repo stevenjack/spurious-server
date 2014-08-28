@@ -15,6 +15,11 @@ module Spurious
           @docker_host = docker_host
         end
 
+        def initialize(connection, config)
+          super
+          connection_timeouts 10, 600, 600
+        end
+
         def execute!
           this = self
           completed_containers = 0

@@ -1,6 +1,7 @@
 require 'docker'
 require 'peach'
 require 'spurious/server'
+require 'excon'
 
 module Spurious
   module Server
@@ -9,8 +10,15 @@ module Spurious
         attr_accessor :connection, :config
 
         def initialize(connection, config)
-          @connection = connection
-          @config     = config
+          @connection      = connection
+          @config          = config
+          connection_timeouts
+        end
+
+        def connection_timeouts(connect = 1, read = 5, write = 5)
+          Excon.defaults[:write_timeout]   = write
+          Excon.defaults[:read_timeout]    = read
+          Excon.defaults[:connect_timeout] = connect
         end
 
         def execute!

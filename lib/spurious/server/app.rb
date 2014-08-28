@@ -17,6 +17,7 @@ module Spurious
           payload = parse_payload data
           state(payload[:type]).execute!
       rescue Exception => e
+        puts e.backtrace
         puts e.message
         state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
       end
