@@ -7,11 +7,11 @@ module Spurious
   module Server
     module State
       class Start < Base
-        attr_accessor :docker_host_ip
+        attr_accessor :docker_host
 
-        def initialize(connection, config, docker_host_ip)
+        def initialize(connection, config, docker_host)
           super(connection, config)
-          @docker_host_ip = docker_host_ip
+          @docker_host = docker_host
         end
 
         def execute!
@@ -26,7 +26,7 @@ module Spurious
               if container.json["Name"] == '/spurious-sqs' then
                 port_setup = Proc.new do
                   port = container.json["NetworkSettings"]["Ports"]['4568/tcp'].first['HostPort']
-                  Net::HTTP.get(URI("http://#{docker_host_ip}:#{port}/host-details?host=#{docker_host_ip}&port=#{port}"))
+                  Net::HTTP.get(URI("http://#{docker_host}:#{port}/host-details?host=#{docker_host}&port=#{port}"))
                 end
 
                 EM.add_timer(5) { EM.defer(port_setup) }

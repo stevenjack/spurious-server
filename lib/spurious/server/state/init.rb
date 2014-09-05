@@ -8,7 +8,12 @@ module Spurious
     module State
       class Init < Base
 
-        attr_accessor :completed_containers
+        attr_accessor :completed_containers, :docker_host
+
+        def initialize(connection, config, docker_host)
+          super(connection, config)
+          @docker_host = docker_host
+        end
 
         def execute!
           this = self
@@ -17,12 +22,17 @@ module Spurious
           app_config.each do |name, meta|
             image_meta = { 'fromImage' => meta[:image]}
             image_meta['Env'] = meta[:env] unless meta[:env].nil?
+            container_cmd = []
+
+            if meta[:image] == 'smaj/spurious-s3'
+              container_cmd = ['-h', docker_host]
+            end
 
             container_operation = Proc.new do
 
               begin
                 this.send "Creating container with name: #{name}"
-                Docker::Container.create("name" => name, "Image" => meta[:image])
+                Docker::Container.create("name" => name, "Image" => meta[:image], 'Cmd' => container_cmd)
               rescue Exception => e
                 case e.message
                 when /409 Conflict/
