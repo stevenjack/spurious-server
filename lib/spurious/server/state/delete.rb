@@ -7,6 +7,11 @@ module Spurious
     module State
       class Delete < Base
 
+        def initialize(connection, config)
+          super
+          connection_timeouts 1, 15, 5
+        end
+
         def execute!
           containers = spurious_containers.length
           spurious_containers.peach do |container|
@@ -26,7 +31,7 @@ module Spurious
           end
           send "#{containers} containers successfully removed", true
         rescue Exception => e
-puts e.backtrace
+          puts e.backtrace
           puts e.message
         end
       end
