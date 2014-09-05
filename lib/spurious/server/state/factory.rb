@@ -14,7 +14,7 @@ module Spurious
         def self.create(type, connection, config, options)
           case type.to_sym
           when :init
-            Init.new(connection, config)
+            Init.new(connection, config, options.docker_host)
           when :start
             Start.new(connection, config, options.docker_host)
           when :stop
