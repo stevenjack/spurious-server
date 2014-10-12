@@ -16,10 +16,14 @@ module Spurious
       def receive_data data
           payload = parse_payload data
           state(payload[:type]).execute!
-      rescue Exception => e
-        puts e.backtrace
-        puts e.message
-        state(:error).tap { |s| s.message = "JSON payload malformed" }.execute!
+      rescue Excon::Errors::Timeout, Excon::Errors::SocketError => e
+          error('Connection to docker daemon failed, please check there server or VM running docker is connected', true)
+      rescue StandardError => e
+        state(:error).tap { |s| s.message = "" }.execute!
+      end
+
+      def error(message, close = false)
+        send_data "#{JSON.generate({:type => 'error', :response => message, :close => close, :colour => :red})}\n"
       end
 
       protected
