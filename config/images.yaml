@@ -19,5 +19,8 @@
 
 'spurious-elasticache-docker':
   :image: 'smaj/fake-elasticache'
+  :ignore:
+    :create: true
+    :delete: true
   :link:
     - 'spurious-memcached:memcached01'

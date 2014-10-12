@@ -23,8 +23,6 @@ module Spurious
             Ports.new(connection, config, options.docker_host)
           when :delete
             Delete.new(connection, config)
-          when :update
-            Update.new(connection, config)
           when :error
             Error.new(connection)
           else

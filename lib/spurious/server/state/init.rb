@@ -7,74 +7,59 @@ module Spurious
   module Server
     module State
       class Init < Base
-
         attr_accessor :completed_containers, :docker_host
 
         def initialize(connection, config, docker_host)
           super(connection, config)
+          connection_timeouts 2, 600, 600
           @docker_host = docker_host
         end
 
-        def initialize(connection, config)
-          super
-          connection_timeouts 10, 600, 600
-        end
-
         def execute!
-          this = self
-          completed_containers = 0
+          send("[status] Pulling containers from the registry can take some time, please be patient...", false, :blue)
+
+          containers = app_config.length
+          index = 0
 
           app_config.each do |name, meta|
-            image_meta = { 'fromImage' => meta[:image]}
-            image_meta['Env'] = meta[:env] unless meta[:env].nil?
-            container_cmd = []
+            image_meta = {}.tap do |h|
+              h['fromImage'] = meta[:image]
+              h['Env']       = meta[:env] unless meta[:env].nil?
+            end
 
             if meta[:image] == 'smaj/spurious-s3'
               container_cmd = ['-h', docker_host]
             end
 
-            container_operation = Proc.new do
-
+            create_container = Proc.new do
               begin
-                this.send "Creating container with name: #{name}"
+                send "[creating] #{name} container"
                 Docker::Container.create("name" => name, "Image" => meta[:image], 'Cmd' => container_cmd)
+                index = index + 1
+                operation_complete(containers == index)
+              rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError
+              rescue Excon::Errors::Conflict
+                error "[error] #{name} container already exists"
               rescue Exception => e
-                case e.message
-                when /409 Conflict/
-                  this.error "Container with name: #{name} already exists"
-                else
-                  this.error "Error creating container: #{e.message}"
-                end
+                error "[error] creating container: #{e.message}"
               end
-
             end
 
-            container_callback = Proc.new do
-              completed_containers = completed_containers + 1
-              this.send("#{config.app.length} containers successfully initialized", true) if completed_containers == app_config.length
-            end
-
-            image_operation = Proc.new do
+            create_image = Proc.new do
               begin
-                this.send "Pulling #{name} from the public repo..."
+                send "[registry] pulling latest for #{name}"
                 Docker::Image.create(image_meta)
-              rescue Exception => e
-                this.error "Error pulling down image: #{e.message}"
-              end
-
-            end
-
-            image_callback = Proc.new do
-              EM.add_timer(1) do
-                EM.defer(container_operation, container_callback)
+              rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError
               end
             end
 
-            EM.add_timer(1) do
-              EM.defer(image_operation, image_callback)
-            end
+            EM.defer(create_image, create_container)
           end
 
+        end
+
+        def operation_complete(complete)
+          send("[status] 6 containers successfully initialized", true, :green) if complete
         end
 
       end
