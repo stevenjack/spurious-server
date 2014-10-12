@@ -2,7 +2,6 @@ require 'spurious/server/state/init'
 require 'spurious/server/state/start'
 require 'spurious/server/state/stop'
 require 'spurious/server/state/delete'
-require 'spurious/server/state/update'
 require 'spurious/server/state/ports'
 require 'spurious/server/state/error'
 
