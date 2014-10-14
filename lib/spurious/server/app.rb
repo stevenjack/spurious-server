@@ -18,7 +18,7 @@ module Spurious
           state(payload[:type]).execute!
       rescue Excon::Errors::Timeout, Excon::Errors::SocketError => e
           error('Connection to the docker daemon has failed, please check that docker is running on the host or VM', true)
-      rescue StandardError => e
+      rescue e
         state(:error).tap { |s| s.message = "" }.execute!
       end
 

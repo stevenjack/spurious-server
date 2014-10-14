@@ -35,27 +35,24 @@ module Spurious
               begin
                 send "[creating] #{name} container"
                 Docker::Container.create("name" => name, "Image" => meta[:image], 'Cmd' => container_cmd)
-                index = index + 1
-                operation_complete(containers == index)
               rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError
               rescue Excon::Errors::Conflict
                 error "[error] #{name} container already exists"
-              rescue Exception => e
-                error "[error] creating container: #{e.message}"
               end
+              index = index + 1
+              operation_complete(containers == index)
             end
 
             create_image = Proc.new do
               begin
                 send "[registry] pulling latest for #{name}"
                 Docker::Image.create(image_meta)
-              rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError
+              rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError, Excon::Errors::Timeout, Excon::Errors::SocketError
               end
             end
 
             EM.defer(create_image, create_container)
           end
-
         end
 
         def operation_complete(complete)
