@@ -9,7 +9,7 @@ module Spurious
       class Start < Base
         attr_accessor :docker_host
 
-        def initialize(connection, config, docker_host)
+        def initialize(connection, config, docker_host_ip)
           super(connection, config)
           connection_timeouts 2, 600, 600
           @docker_host_ip = docker_host_ip
@@ -17,12 +17,14 @@ module Spurious
 
         def execute!
           started_containers = 0
+
+          raise "Containers haven't been initialised, please run 'spurious init' first." if spurious_containers.length == 0
+
           spurious_containers.each do |container|
             begin
               started_containers = started_containers + 1
               config = container_config(container.json["Name"])
               send "Starting #{container.json["Name"].gsub('/', '')}", :debug
-
               meta = {}.tap do |m|
                 m["PublishAllPorts"] = true
                 m["Links"] = config[:link] unless config[:link].nil?
@@ -51,7 +53,7 @@ module Spurious
             end
           end
 
-          send("[status] started #{started_containers} containers", true, :green)
+          send("Started #{started_containers} containers", :info, true, :green)
         end
 
       end

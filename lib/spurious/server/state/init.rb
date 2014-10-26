@@ -16,7 +16,12 @@ module Spurious
         end
 
         def execute!
-          send("[status] Pulling containers from the registry can take some time, please be patient...", false, :blue)
+
+          raise "Containers have already been initilised, please run 'spurious start'" if spurious_containers.length > 0
+
+
+
+          send("Pulling containers from the registry can take some time, please be patient...", :info, false, :blue)
 
           containers = app_config.length
           index = 0
@@ -26,6 +31,7 @@ module Spurious
               h['fromImage'] = meta[:image]
               h['Env']       = meta[:env] unless meta[:env].nil?
             end
+            container_cmd = []
 
             if meta[:image] == 'smaj/spurious-s3'
               container_cmd = ['-h', docker_host]
@@ -33,11 +39,11 @@ module Spurious
 
             create_container = Proc.new do
               begin
-                send "[creating] #{name} container"
+                send "Creating #{name} container", :debug
                 Docker::Container.create("name" => name, "Image" => meta[:image], 'Cmd' => container_cmd)
               rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError
               rescue Excon::Errors::Conflict
-                error "[error] #{name} container already exists"
+                error "#{name} container already exists"
               end
               index = index + 1
               operation_complete(containers == index)
@@ -45,7 +51,7 @@ module Spurious
 
             create_image = Proc.new do
               begin
-                send "[registry] pulling latest for #{name}"
+                send "Pulling latest version of #{name} from registry", :debug
                 Docker::Image.create(image_meta)
               rescue Docker::Error::ArgumentError, Docker::Error::NotFoundError, Excon::Errors::Timeout, Excon::Errors::SocketError
               end
@@ -56,7 +62,7 @@ module Spurious
         end
 
         def operation_complete(complete)
-          send("[status] 6 containers successfully initialized", true, :green) if complete
+          send("6 containers successfully initialized", :info, true, :green) if complete
         end
 
       end

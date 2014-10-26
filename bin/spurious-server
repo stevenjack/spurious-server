@@ -12,9 +12,6 @@ require 'spurious/server/options'
 options = Spurious::Server::Options.new(ENV)
 ENV['DOCKER_HOST'] = options.ssl_docker_host
 
-Excon.defaults[:write_timeout] = options.write_timeout
-Excon.defaults[:read_timeout]  = options.read_timeout
-
 Daemons.run_proc('Spurious_Server', :dir => '/tmp', :log_output => true) do
   EventMachine.synchrony Spurious::Server.handle(options)
 end

@@ -4,7 +4,6 @@ module Spurious
       attr_reader :docker_full_path, :docker_host, :docker_port, :docker_api, :server_port, :server_ip, :write_timeout, :read_timeout, :cert_path
 
       def initialize(env)
-        @docker_full_path = env['DOCKER_HOST']
         @docker_host      = env['DOCKER_HOST'].nil? ? 'localhost' : env['DOCKER_HOST'][/\/\/([0-9a-z\.]+):/,1]
         @docker_port      = env['DOCKER_HOST'].nil? ? nil : env['DOCKER_HOST'][/:([0-9]+)/,1]
         @docker_api       = !env['DOCKER_HOST'].nil?

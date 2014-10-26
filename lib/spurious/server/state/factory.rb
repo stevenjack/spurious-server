@@ -10,7 +10,7 @@ module Spurious
     module State
       module Factory
 
-        def self.create(type, connection, config, options)
+        def self.create(type, connection, config, options = {})
           case type.to_sym
           when :init
             Init.new(connection, config, options.docker_host)
