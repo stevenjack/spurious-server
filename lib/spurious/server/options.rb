@@ -23,10 +23,16 @@ module Spurious
 
       def setup_ssl
         Docker.options = {
-          :client_cert => File.join(absolute_cert_path, 'cert.pem'),
-          :client_key  => File.join(absolute_cert_path, 'key.pem'),
-          :ssl_ca_file => File.join(absolute_cert_path, 'ca.pem')
+          :client_cert => valid_cert_path?('cert.pem'),
+          :client_key  => valid_cert_path?('key.pem'),
+          :ssl_ca_file => valid_cert_path?('ca.pem')
         }
+      end
+
+      def valid_cert_path?(cert)
+        File.join(absolute_cert_path, cert).tap do |path|
+          raise "Could not find: #{path}, please check it exists in your DOCKER_CERTS_PATH folder" unless File.exists? path
+        end
       end
 
       def absolute_cert_path
