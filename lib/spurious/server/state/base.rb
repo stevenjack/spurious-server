@@ -43,8 +43,8 @@ module Spurious
           config.for sanitize(image)
         end
 
-        def send(data, close = false, colour = :white)
-          connection.send_data "#{JSON.generate({:type => state_identifer, :response => data, :close => close, :colour => colour})}\n"
+        def send(data, message_type = 'info', close = false, colour = :white)
+          connection.send_data "#{JSON.generate({:message_type => message_type, :type => state_identifer, :response => data, :close => close, :colour => colour})}\n"
         end
 
         def error(message, close = false)

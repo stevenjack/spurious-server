@@ -18,12 +18,12 @@ module Spurious
           state(payload[:type]).execute!
       rescue Excon::Errors::Timeout, Excon::Errors::SocketError => e
           error('Connection to the docker daemon has failed, please check that docker is running on the host or VM', true)
-      rescue e
-        state(:error).tap { |s| s.message = "" }.execute!
+      rescue StandardError => e
+        error(e.message, true)
       end
 
       def error(message, close = false)
-        send_data "#{JSON.generate({:type => 'error', :response => message, :close => close, :colour => :red})}\n"
+        send_data "#{JSON.generate({:message_type => 'error', :type => 'error', :response => message, :close => close, :colour => :red})}\n"
       end
 
       protected

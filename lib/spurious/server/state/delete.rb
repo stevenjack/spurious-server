@@ -16,17 +16,18 @@ module Spurious
           containers = spurious_containers.length - 1
 
           spurious_containers.each_with_index do |container, index|
-            container_name = container.json["Name"].gsub('/', '')
+            container_name   = container.json["Name"].gsub('/', '')
             container_config = config.for(container_name)
+            container_meta   = container.json
 
             remove_container = Proc.new do
-              send "[removing] #{container_name}"
+              send "Removing #{container_name}"
               container.delete(:force => true)
 
               unless container_config[:ignore] && container_config[:ignore][:delete]
                 image = container_config[:image]
 
-                Docker::Image.create('fromImage' => image).tap do |image|
+                Docker::Image.get(container_meta["Image"]).tap do |image|
                   image.remove(:force => true)
                 end
               end
@@ -42,7 +43,7 @@ module Spurious
 
         def operation_complete
           Proc.new do |complete|
-            send("[status] 5 containers successfully removed", true, :green) if complete
+            send("5 containers successfully removed", true, :green) if complete
           end
         end
       end

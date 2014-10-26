@@ -34,7 +34,7 @@ module Spurious
             end
 
           end
-          send ports, true
+          send ports, :info, true
 
           connection.unbind
         rescue Exception => e

@@ -18,7 +18,7 @@ module Spurious
           spurious_containers.each_with_index do |container, index|
             stop_containers = Proc.new do
 
-              send "[container] Stopping #{container.json["Name"].gsub('/', '')}"
+              send "Stopping #{container.json["Name"].gsub('/', '')}"
               container.stop
               index_to_check = index + 1
               containers == index_to_check
@@ -29,7 +29,7 @@ module Spurious
 
         def operation_complete
           Proc.new do |complete|
-            send("[status] stopped 6 containers", true, :green) if complete
+            send("Stopped 6 containers", :info, true, :green) if complete
           end
         end
 
