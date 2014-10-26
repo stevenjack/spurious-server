@@ -18,7 +18,7 @@ module Spurious
           spurious_containers.each_with_index do |container, index|
             stop_containers = Proc.new do
 
-              send "Stopping #{container.json["Name"].gsub('/', '')}"
+              send "Stopping #{container.json["Name"].gsub('/', '')}", :debug
               container.stop
               index_to_check = index + 1
               containers == index_to_check

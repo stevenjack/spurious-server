@@ -21,7 +21,8 @@ module Spurious
             begin
               started_containers = started_containers + 1
               config = container_config(container.json["Name"])
-              send "[container] Starting #{container.json["Name"].gsub('/', '')}"
+              send "Starting #{container.json["Name"].gsub('/', '')}", :debug
+
               meta = {}.tap do |m|
                 m["PublishAllPorts"] = true
                 m["Links"] = config[:link] unless config[:link].nil?

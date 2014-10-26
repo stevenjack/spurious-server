@@ -21,7 +21,7 @@ module Spurious
             container_meta   = container.json
 
             remove_container = Proc.new do
-              send "Removing #{container_name}"
+              send "Removing #{container_name}", :debug
               container.delete(:force => true)
 
               unless container_config[:ignore] && container_config[:ignore][:delete]
@@ -43,7 +43,7 @@ module Spurious
 
         def operation_complete
           Proc.new do |complete|
-            send("5 containers successfully removed", true, :green) if complete
+            send("5 containers successfully removed", :info, true, :green) if complete
           end
         end
       end
