@@ -7,7 +7,7 @@ module Spurious
   module Server
     module State
       class Start < Base
-        attr_accessor :docker_host
+        attr_accessor :docker_host_ip
 
         def initialize(connection, config, docker_host_ip)
           super(connection, config)
