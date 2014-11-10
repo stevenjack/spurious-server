@@ -35,8 +35,9 @@ module Spurious
               if container.json["Name"] == '/spurious-sqs' then
                 port_setup = Proc.new do
                   begin
+                    container_config = app_config['spurious-sqs']
                     port = container.json["NetworkSettings"]["Ports"]['4568/tcp'].first['HostPort']
-                    Net::HTTP.get(URI("http://#{docker_host_ip}:#{port}/host-details?host=#{docker_host_ip}&port=#{port}"))
+                    Net::HTTP.get(URI("http://#{docker_host_ip}:#{port}/host-details?host=#{container_config[:hostname]}&port=#{port}"))
                   rescue StandardError => e
                   end
                 end

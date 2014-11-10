@@ -34,7 +34,7 @@ module Spurious
             container_cmd = []
 
             if meta[:image] == 'smaj/spurious-s3'
-              container_cmd = ['-h', docker_host]
+              container_cmd = ['-h', meta[:hostname]]
             end
 
             create_container = Proc.new do
@@ -62,7 +62,10 @@ module Spurious
         end
 
         def operation_complete(complete)
-          send("6 containers successfully initialized", :info, true, :green) if complete
+          if complete
+            send("#{app_config.length} containers successfully initialized", :info, false, :green)
+            send("Please add the following to your /etc/hosts file:\n\n#{docker_host} spurious.sqs.local spurious.s3.local spurious.dynamodb.local spurious.browser.local\n", :info, true, :blue)
+          end
         end
 
       end
