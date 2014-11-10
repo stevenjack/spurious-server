@@ -1,27 +1,27 @@
 'spurious-sqs':
-  :image: 'smaj/spurious-sqs'
+  :image: 'spurious/sqs'
   :hostname: 'spurious.sqs.local'
 
 'spurious-s3':
-  :image: 'smaj/spurious-s3'
+  :image: 'spurious/s3'
   :hostname: 'spurious.s3.local'
 
 'spurious-dynamo':
-  :image: 'smaj/spurious-dynamo'
+  :image: 'spurious/dynamodb'
   :hostname: 'spurious.dynamodb.local'
 
 'spurious-memcached':
   :image: 'smaj/memcached'
 
 'spurious-elasticache':
-  :image: 'smaj/fake-elasticache'
+  :image: 'spurious/elasticache'
   :link:
     - 'spurious-memcached:memcached01'
   :env:
     FAKEELASTICACHE_DEFAULT_HOST: '127.0.0.1'
 
 'spurious-elasticache-docker':
-  :image: 'smaj/fake-elasticache'
+  :image: 'spurious/elasticache'
   :ignore:
     :create: true
     :delete: true
@@ -29,7 +29,7 @@
     - 'spurious-memcached:memcached01'
 
 'spurious-browser':
-  :image: 'smaj/spurious-browser'
+  :image: 'spurious/browser'
   :link:
     - 'spurious-dynamo:spurious.dynamodb.local'
     - 'spurious-sqs:spurious.sqs.local'
