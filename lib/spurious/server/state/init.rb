@@ -33,7 +33,7 @@ module Spurious
             end
             container_cmd = []
 
-            if meta[:image] == 'smaj/spurious-s3'
+            if meta[:image] == 'spurious/s3'
               container_cmd = ['-h', meta[:hostname]]
             end
 
