@@ -34,7 +34,7 @@ module Spurious
             container_cmd = []
 
             if meta[:image] == 'spurious/s3'
-              container_cmd = ['-h', meta[:hostname]]
+              container_cmd = ['-H', meta[:hostname]]
             end
 
             create_container = Proc.new do

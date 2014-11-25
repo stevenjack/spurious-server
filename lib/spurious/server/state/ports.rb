@@ -17,15 +17,17 @@ module Spurious
         def execute!
           ports = {}
           spurious_containers.peach do |container|
+            a_config = app_config[container.json['Name'].gsub('/', '')]
             config = container_config(container.json["Name"])
             ports[sanitize(container.json["Name"])] = []
 
             if !container.json["NetworkSettings"]["Ports"].nil? then
+              host = a_config
 
               container.json["NetworkSettings"]["Ports"].each do |guest, mapping|
                 mapping.each do |map|
                   ports[sanitize(container.json["Name"])] << {
-                    :Host       => docker_host_ip,
+                    :Host       => a_config.fetch(:hostname, docker_host_ip),
                     :HostPort   => map["HostPort"]
                  }
                 end
