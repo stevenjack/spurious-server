@@ -12,6 +12,6 @@ require 'spurious/server/options'
 options = Spurious::Server::Options.new(ENV)
 ENV['DOCKER_HOST'] = options.ssl_docker_host
 
-Daemons.run_proc('Spurious_Server', :dir => '/tmp', :log_output => true) do
+Daemons.run_proc('.spurious-server', :dir => '~/', :log_output => true) do
   EventMachine.synchrony Spurious::Server.handle(options)
 end
