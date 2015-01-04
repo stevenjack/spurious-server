@@ -1,14 +1,14 @@
 'spurious-sqs':
   :image: 'spurious/sqs'
-  :hostname: 'spurious.sqs.local'
+  :hostname: 'sqs.spurious.localhost'
 
 'spurious-s3':
   :image: 'spurious/s3'
-  :hostname: 'spurious.s3.local'
+  :hostname: 's3.spurious.localhost'
 
 'spurious-dynamo':
   :image: 'spurious/dynamodb'
-  :hostname: 'spurious.dynamodb.local'
+  :hostname: 'dynamodb.spurious.localhost'
 
 'spurious-memcached':
   :image: 'smaj/memcached'
@@ -31,7 +31,7 @@
 'spurious-browser':
   :image: 'spurious/browser'
   :link:
-    - 'spurious-dynamo:spurious.dynamodb.local'
-    - 'spurious-sqs:spurious.sqs.local'
-    - 'spurious-s3:spurious.s3.local'
-  :hostname: 'spurious.browser.local'
+    - 'spurious-dynamo:dynamodb.spurious.localhost'
+    - 'spurious-sqs:sqs.spurious.localhost'
+    - 'spurious-s3:s3.spurious.localhost'
+  :hostname: 'browser.spurious.localhost'

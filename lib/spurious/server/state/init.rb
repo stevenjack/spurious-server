@@ -64,7 +64,7 @@ module Spurious
         def operation_complete(complete)
           if complete
             send("#{app_config.length} containers successfully initialized", :info, false, :green)
-            send("Please add the following to your /etc/hosts file:\n\n#{docker_host} spurious.sqs.local spurious.s3.local spurious.dynamodb.local spurious.browser.local\n", :info, true, :blue)
+            send("Please add the following to your /etc/hosts file:\n\n#{docker_host} sqs.spurious.localhost s3.spurious.localhost dynamodb.spurious.localhost browser.spurious.localhost\n", :info, true, :blue)
           end
         end
 
