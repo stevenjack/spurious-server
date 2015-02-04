@@ -11,7 +11,7 @@ module Spurious
 
         def initialize(connection, config, docker_host)
           super(connection, config)
-          connection_timeouts 2, 600, 600
+          connection_timeouts 2, 3600, 3600
           @docker_host = docker_host
         end
 
