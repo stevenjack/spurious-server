@@ -19,6 +19,7 @@ module Spurious
           Excon.defaults[:write_timeout]   = write
           Excon.defaults[:read_timeout]    = read
           Excon.defaults[:connect_timeout] = connect
+          Excon.defaults[:ssl_verify_peer] = false
         end
 
         def execute!
