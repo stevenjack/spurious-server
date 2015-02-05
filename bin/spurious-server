@@ -2,18 +2,6 @@
 
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 
-require 'spurious/server'
-require 'spurious/server/version'
-require 'daemons'
-require 'eventmachine'
-require 'em-synchrony'
-require 'spurious/server/options'
+require "spurious/server/cli"
 
-options = Spurious::Server::Options.new(ENV)
-ENV['DOCKER_HOST'] = options.ssl_docker_host
-
-if Spurious::Server.docker_daemon_available? ARGV[0]
-  Daemons.run_proc('.spurious-server', :dir => '~/') do
-    EventMachine.synchrony Spurious::Server.handle(options)
-  end
-end
+Spurious::Server::CLI.start
