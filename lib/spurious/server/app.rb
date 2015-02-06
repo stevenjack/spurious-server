@@ -1,3 +1,4 @@
+require "docker"
 require "spurious/server/state/factory"
 require "spurious/server/config"
 

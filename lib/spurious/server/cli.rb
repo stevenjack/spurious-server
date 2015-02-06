@@ -1,3 +1,4 @@
+require "docker"
 require "thor"
 require "spurious/server"
 require "spurious/server/options"
@@ -66,7 +67,7 @@ module Spurious
       end
 
       def docker_daemon_available?
-        say "Checking is docker daemon is available...", :blue
+        say "Checking if docker daemon is available...", :blue
         Excon.defaults[:connect_timeout] = Excon.defaults[:read_timeout] = TIMEOUT
         Docker.info
         true
@@ -87,7 +88,7 @@ module Spurious
 
       def check_and_clear_id
         if pid_exists? && ! is_process_running?
-          say "Process isn't running but PID file exists.. removing", :red
+          say "Process isn't running but PID file exists, removing", :red
           File.delete PID
         elsif pid_exists?
           error "Server already running"
