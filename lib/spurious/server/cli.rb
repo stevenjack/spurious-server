@@ -68,11 +68,15 @@ module Spurious
 
       def docker_daemon_available?
         say "Checking if docker daemon is available...", :blue
+        if ENV["DOCKER_TLS_VERIFY"] == '0'
+          say 'Turning off TLS verification...'
+          Excon.defaults[:ssl_verify_peer] = false
+        end
         Excon.defaults[:connect_timeout] = Excon.defaults[:read_timeout] = TIMEOUT
         Docker.info
         true
       rescue Excon::Errors::SocketError, Excon::Errors::Timeout, Docker::Error::TimeoutError => e
-        error "Connection to the docker daemon (#{ENV["DOCKER_HOST"]}) failed... Check that it's running"
+        error "Connection to the docker daemon (#{ENV["DOCKER_HOST"]}) failed with error: #{e}"
         false
       end
 
