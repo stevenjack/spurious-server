@@ -29,6 +29,7 @@ module Spurious
           app_config.each do |name, meta|
             image_meta = {}.tap do |h|
               h['fromImage'] = meta[:image]
+              h['tag']       = "latest"
               h['Env']       = meta[:env] unless meta[:env].nil?
             end
             container_cmd = []
